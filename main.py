@@ -974,8 +974,24 @@ def main():
                 try:
                     story = run_interactive_choice_mode(story, request, total_steps=CHOICE_MODE_MAX_STEPS)
                     display_story(story)
+
+                    # After Interactive Choice Mode, automatically save and finish.
+                    safe_title = re.sub(r"[^\w\s-]", "", story.title).strip().replace(" ", "_")
+                    filename = f"{safe_title}.txt" if safe_title else "story.txt"
+                    with open(filename, "w", encoding="utf-8") as f:
+                        f.write("=" * 60 + "\n")
+                        f.write(f"{story.title}\n")
+                        f.write("=" * 60 + "\n\n")
+                        f.write(story.content + "\n\n")
+                        f.write("-" * 60 + "\n")
+                        f.write(f"Moral: {story.moral}\n")
+                        f.write("=" * 60 + "\n")
+
+                    print(f"\nStory saved to: {filename}")
+                    print("\nEnjoy the story! Sweet dreams!\n")
+                    return
                 except Exception as e:
-                    print(f"\nError during Interactive Choice Mode: {e}\n")
+                    print(f"\nError during Interactive Choice Mode or saving: {e}\n")
                 continue
 
             if choice == "3":
